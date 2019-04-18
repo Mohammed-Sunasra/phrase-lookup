@@ -30,7 +30,7 @@ class Tokenize:
         y_encoded = np.array(pd.get_dummies(self.y.values))
         return tok, sequence_matrix, y_encoded
 
-    def _load_word_vectors():
+    def _load_word_vectors(self):
         embeddings_index = {}
         f = open(glove_dir/'glove.6B.200d.txt')
         for line in f:
@@ -41,7 +41,7 @@ class Tokenize:
         f.close()
         
         embedding_matrix = np.zeros((len(self.tok.word_index) + 1, EMBEDDING_DIM))
-        for word, i in word_index.items():
+        for word, i in self.tok.word_index.items():
             embedding_vector = embeddings_index.get(word)
             if embedding_vector is not None:
                 embedding_matrix[i] = embedding_vector
