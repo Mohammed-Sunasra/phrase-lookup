@@ -27,7 +27,7 @@ class LSTMModel:
         model = Sequential()
         model.add(Embedding(self.max_words, EMBEDDING_DIM, input_length=self.input_shape, weights=[pretrained_embeddings]))
         model.add(SpatialDropout1D(0.2))
-        model.add(LSTM(100, dropout=0.2, recurrent_dropout=0.2))
+        model.add(LSTM(256, dropout=0.2, recurrent_dropout=0.2))
         model.add(Dense(self.no_of_classes, activation='softmax'))
         return model
     

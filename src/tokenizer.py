@@ -12,7 +12,7 @@ class Tokenize:
     
     def __init__(self, data_reader, max_words, max_len, test_size=0.20, shuffle=True, random_state=42):
         self.data = data_reader.data
-        self.X, self.y = self.data[INPUT_COL_NAME], self.data[MED_ID]
+        self.X, self.y = self.data[INPUT_COL_NAME], self.data[OUTPUT_COL_NAME]
         self.max_words = max_words
         self.max_len = max_len
         self.tok, self.X, self.y = self._preprocess()

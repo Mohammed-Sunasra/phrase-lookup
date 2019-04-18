@@ -26,12 +26,12 @@ class DataReader:
         data = data[data[MED_ID].isin(self.meddra_dict.id)]
         unique_pts = data[OUTPUT_COL_NAME].unique()
         #unique_ids = data[MED_ID].unique()
-        self.int_to_pt = {idx:pt_term for idx, pt_term in enumerate(unique_pts)}
-        self.pt_to_int = {pt_term:idx for idx, pt_term in enumerate(unique_pts)}
+        int_to_pt = {idx:pt_term for idx, pt_term in enumerate(unique_pts)}
+        pt_to_int = {pt_term:idx for idx, pt_term in enumerate(unique_pts)}
         data = data[~data[OUTPUT_COL_NAME].isnull()]
         #self.int_to_med = {idx:med_id for idx, med_id in enumerate(unique_ids)}
         #self.med_to_int = {med_id:idx for idx, med_id in enumerate(unique_ids)}
-        data[OUTPUT_COL_NAME] = data[OUTPUT_COL_NAME].apply(lambda x: self.pt_to_int[x])
+        data[OUTPUT_COL_NAME] = data[OUTPUT_COL_NAME].apply(lambda x: pt_to_int[x])
         #data[MED_ID] = data[MED_ID].apply(lambda x: self.med_to_int[x])
         #data = data[~data[OUTPUT_COL_NAME].isnull()]
         return data, pt_to_int
