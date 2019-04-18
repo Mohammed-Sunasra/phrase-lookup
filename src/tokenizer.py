@@ -6,11 +6,12 @@ from sklearn.model_selection import train_test_split
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 from config.constants import *
-from config.path import glove_dir
+from config.path import glove_dir, TOKENIZER
 
 class Tokenize:
     
     def __init__(self, data_reader, max_words, max_len, test_size=0.20, shuffle=True, random_state=42):
+        self.reader = data_reader
         self.data = data_reader.data
         self.X, self.y = self.data[INPUT_COL_NAME], self.data[OUTPUT_COL_NAME]
         self.max_words = max_words
@@ -53,13 +54,13 @@ class Tokenize:
             pickle.dump(self.tok, pickle_file)
 
     
-    def prepare_text(self, input_text, tokenizer_path=None, max_len=None):
+    def prepare_text(self, input_text):
         """
         This function pre-processes text and converts it into sequence matrix
         """
         if not self.tok:
-            self.tok = pickle.load(open(tokenizer_path, "rb"))
-            self.max_len = max_len
+            self.tok = pickle.load(open(TOKENIZER, "rb"))
+            #self.max_len = max_len
         input_text = pd.Series(input_text)
         sequences = self.tok.texts_to_sequences(input_text)
         sequences_matrix = sequence.pad_sequences(sequences, maxlen=self.max_len, padding='pre')

@@ -39,7 +39,12 @@ class LSTMModel:
                        callbacks=[
                             ReduceLROnPlateau(),
                             EarlyStopping(monitor='val_loss', patience=10, min_delta=0.0001),
-                            ModelCheckpoint(filepath=os.path.join(str(model_path), '/model-LSTM-best_weights.h5'), save_best_only=True)])
+                            ModelCheckpoint(filepath=os.path.join(str(model_path) + "/", 'model_lstm_best_weights.h5'), save_best_only=True)])
+    
+    def predict(self, input_sequence):
+        output = self.model.predict(input_sequence)
+        med_dict = self.tokenizer.reader.pt_to_int
+        return {output, med_dict[output]}
 
     def save(self, model_json_path, model_weights_path):
         with open(str(model_json_path), 'w') as json_file:
