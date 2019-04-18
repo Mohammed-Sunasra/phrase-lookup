@@ -63,6 +63,6 @@ class Tokenize:
             #self.max_len = max_len
         input_text = pd.Series(input_text)
         sequences = self.tok.texts_to_sequences(input_text)
-        sequences_matrix = sequence.pad_sequences(sequences, maxlen=self.max_len, padding='pre')
+        sequences_matrix = pad_sequences(sequences, maxlen=self.max_len, padding='pre')
 
         return sequences_matrix

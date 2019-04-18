@@ -8,7 +8,7 @@ class DataReader:
         self.test_data = pd.read_csv(test_file_path)
         self.meddra_dict = pd.read_csv(dictionary_path)
         #self.unique_ids = self.data[MED_ID].unique()
-        self.data, self.pt_to_int = self._clean_data()
+        self.data, self.pt_to_int, self.int_to_pt = self._clean_data()
         
 
     def _clean_data(self):
@@ -35,7 +35,7 @@ class DataReader:
         data[OUTPUT_COL_NAME] = data[OUTPUT_COL_NAME].apply(lambda x: pt_to_int[x])
         #data[MED_ID] = data[MED_ID].apply(lambda x: self.med_to_int[x])
         #data = data[~data[OUTPUT_COL_NAME].isnull()]
-        return data, pt_to_int
+        return data, pt_to_int, int_to_pt
 
     def _drop_null_values(self, data):
         data = data.dropna(axis=0, how='all')

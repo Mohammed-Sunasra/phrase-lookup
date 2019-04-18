@@ -1,4 +1,5 @@
 import os
+import numpy as np
 import keras
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
@@ -42,9 +43,11 @@ class LSTMModel:
                             ModelCheckpoint(filepath=os.path.join(str(model_path) + "/", 'model_lstm_best_weights.h5'), save_best_only=True)])
     
     def predict(self, input_sequence):
-        output = self.model.predict(input_sequence)
-        med_dict = self.tokenizer.reader.pt_to_int
-        return {output, med_dict[output]}
+        output = np.argmax(self.model.predict(input_sequence))
+        print(output)
+        med_dict = self.tokenizer.reader.int_to_pt
+        print(med_dict[output])
+        #return (output, med_dict[output])
 
     def save(self, model_json_path, model_weights_path):
         with open(str(model_json_path), 'w') as json_file:
