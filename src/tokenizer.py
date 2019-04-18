@@ -16,7 +16,7 @@ class Tokenize:
         self.max_words = max_words
         self.max_len = max_len
         self.tok, self.X, self.y = self._preprocess()
-        #self.pretrained_embeddings = self._load_word_vectors()
+        self.pretrained_embeddings = self._load_word_vectors()
         self.X_train, self.X_val, self.y_train, self.y_val = train_test_split(
             self.X, self.y,
             test_size=test_size, shuffle=shuffle,
@@ -30,23 +30,23 @@ class Tokenize:
         y_encoded = np.array(pd.get_dummies(self.y.values))
         return tok, sequence_matrix, y_encoded
 
-    # def _load_word_vectors():
-    #     embeddings_index = {}
-    #     f = open(glove_dir/'glove.6B.200d.txt')
-    #     for line in f:
-    #         values = line.split()
-    #         word = values[0]
-    #         coefs = np.asarray(values[1:], dtype='float32')
-    #         embeddings_index[word] = coefs
-    #     f.close()
+    def _load_word_vectors():
+        embeddings_index = {}
+        f = open(glove_dir/'glove.6B.200d.txt')
+        for line in f:
+            values = line.split()
+            word = values[0]
+            coefs = np.asarray(values[1:], dtype='float32')
+            embeddings_index[word] = coefs
+        f.close()
         
-    #     embedding_matrix = np.zeros((len(self.tok.word_index) + 1, EMBEDDING_DIM))
-    #     for word, i in word_index.items():
-    #         embedding_vector = embeddings_index.get(word)
-    #         if embedding_vector is not None:
-    #             embedding_matrix[i] = embedding_vector
+        embedding_matrix = np.zeros((len(self.tok.word_index) + 1, EMBEDDING_DIM))
+        for word, i in word_index.items():
+            embedding_vector = embeddings_index.get(word)
+            if embedding_vector is not None:
+                embedding_matrix[i] = embedding_vector
 
-    #     return embedding_matrix
+        return embedding_matrix
 
     def save_tokenizer(self, filepath):
         with open(str(filepath), 'wb') as pickle_file:

@@ -15,7 +15,7 @@ class LSTMModel:
         self.max_words = len(self.tokenizer.tok.word_index)
         self.input_shape = self.tokenizer.X_train.shape[1]
         self.no_of_classes = self.tokenizer.y.shape[1]
-        self.model = self._create_rnn()
+        self.model = self._create_rnn(self.tokenizer.pretrained_embeddings)
         self.model.compile(loss=loss, optimizer=optimizer, metrics=metrics)
         self.batch_size = batch_size
         self.epochs = epochs
