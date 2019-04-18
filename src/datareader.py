@@ -8,7 +8,7 @@ class DataReader:
         self.test_data = pd.read_csv(test_file_path)
         self.meddra_dict = pd.read_csv(dictionary_path)
         #self.unique_ids = self.data[MED_ID].unique()
-        self.data = self._clean_data()
+        self.data, self.pt_to_int = self._clean_data()
         
 
     def _clean_data(self):
@@ -24,12 +24,17 @@ class DataReader:
         self.test_data = self.test_data[self.test_data[MED_ID].isin(self.meddra_dict.id)]
         data = pd.concat([self.train_data, self.test_data], axis=0)
         data = data[data[MED_ID].isin(self.meddra_dict.id)]
-        unique_ids = data[MED_ID].unique()
-        self.int_to_med = {idx:med_id for idx, med_id in enumerate(unique_ids)}
-        self.med_to_int = {med_id:idx for idx, med_id in enumerate(unique_ids)}
-        data[MED_ID] = data[MED_ID].apply(lambda x: self.med_to_int[x])
+        unique_pts = data[OUTPUT_COL_NAME].unique()
+        #unique_ids = data[MED_ID].unique()
+        self.int_to_pt = {idx:pt_term for idx, pt_term in enumerate(unique_pts)}
+        self.pt_to_int = {pt_term:idx for idx, pt_term in enumerate(unique_pts)}
         data = data[~data[OUTPUT_COL_NAME].isnull()]
-        return data
+        #self.int_to_med = {idx:med_id for idx, med_id in enumerate(unique_ids)}
+        #self.med_to_int = {med_id:idx for idx, med_id in enumerate(unique_ids)}
+        data[OUTPUT_COL_NAME] = data[OUTPUT_COL_NAME].apply(lambda x: self.pt_to_int[x])
+        #data[MED_ID] = data[MED_ID].apply(lambda x: self.med_to_int[x])
+        #data = data[~data[OUTPUT_COL_NAME].isnull()]
+        return data, pt_to_int
 
     def _drop_null_values(self, data):
         data = data.dropna(axis=0, how='all')

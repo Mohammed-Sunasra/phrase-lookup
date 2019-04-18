@@ -1,3 +1,4 @@
+import os
 import keras
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
@@ -6,6 +7,7 @@ from keras.layers import Dense, Embedding, GlobalMaxPool1D, Dropout, SpatialDrop
 from keras.optimizers import Adam
 from keras.callbacks import ReduceLROnPlateau, EarlyStopping, ModelCheckpoint
 from config.constants import *
+from config.path import model_path
 
 
 class LSTMModel:
@@ -37,7 +39,7 @@ class LSTMModel:
                        callbacks=[
                             ReduceLROnPlateau(),
                             EarlyStopping(monitor='val_loss', patience=10, min_delta=0.0001),
-                            ModelCheckpoint(filepath='model-LSTM-word2vec.h5', save_best_only=True)])
+                            ModelCheckpoint(filepath=os.path.join(str(model_path), '/model-LSTM-best_weights.h5'), save_best_only=True)])
 
     def save(self, model_json_path, model_weights_path):
         with open(str(model_json_path), 'w') as json_file:
