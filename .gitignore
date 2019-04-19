@@ -2,8 +2,8 @@ glove/
 .ipynb_checkpoints/
 src/word_embeddings/
 src/__pycache__/
-src/model_files/
 src/output_files/
+src/model_files/
 *.pyc
-*.h5
 .vscode/
+*.h5
