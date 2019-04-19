@@ -80,12 +80,10 @@ class LSTMModel:
     
     def predict(self, input_sequence):
         """
-        Predicts the PT term for the REPORTED_TERM passed
+        Predicts the PT term for the REPORTED_TERM passed and returns the PT_ID and PT_TERM
             :param self: 
             :param input_sequence: 
         """   
         output = np.argmax(self.model.predict(input_sequence))
-        print(output)
         med_dict = self.tokenizer.reader.int_to_pt
-        print(med_dict[output])
-        #return (output, med_dict[output])
+        return (output, med_dict[output])
