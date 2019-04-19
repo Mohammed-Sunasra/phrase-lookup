@@ -24,6 +24,10 @@ class Tokenize:
             random_state=random_state)
 
     def _preprocess(self):
+        """
+        Pre-processes the input text data and returns encoded data
+            :param self: 
+        """   
         tok = Tokenizer(num_words=self.max_words)
         tok.fit_on_texts(self.X)
         sequences = tok.texts_to_sequences(self.X)
@@ -32,6 +36,10 @@ class Tokenize:
         return tok, sequence_matrix, y_encoded
 
     def _load_word_vectors(self):
+        """
+        Loads pre-trained glove embeddings and returns the embedding matrix
+            :param self: 
+        """   
         embeddings_index = {}
         f = open(glove_dir/'glove.6B.200d.txt')
         for line in f:
@@ -50,13 +58,18 @@ class Tokenize:
         return embedding_matrix
 
     def save_tokenizer(self, filepath):
+        """
+        Pickles and saves the tokenizer for inference time
+            :param self: 
+            :param filepath: 
+        """   
         with open(str(filepath), 'wb') as pickle_file:
             pickle.dump(self.tok, pickle_file)
 
     
     def prepare_text(self, input_text):
         """
-        This function pre-processes text and converts it into sequence matrix
+        Pre-processes the input text into a sequence matrix
         """
         if not self.tok:
             self.tok = pickle.load(open(TOKENIZER, "rb"))

@@ -1,6 +1,7 @@
 import os
 import numpy as np
 import keras
+from keras.engine.saving import model_from_json
 from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 from keras.models import Sequential
@@ -12,7 +13,7 @@ from config.path import model_path
 
 
 class LSTMModel:
-
+    
     def __init__(self, tokenizer, loss=None, optimizer=None, metrics=None, batch_size=64, epochs=50, shuffle=True):
         self.tokenizer = tokenizer
         self.max_words = len(self.tokenizer.tok.word_index) + 1
@@ -25,6 +26,11 @@ class LSTMModel:
         self.shuffle = shuffle
 
     def _create_rnn(self, pretrained_embeddings=None):
+        """
+        Creates an LSTM based model with pretrained Glove word embeddings
+            :param self: 
+            :param pretrained_embeddings=None: 
+        """   
         model = Sequential()
         model.add(Embedding(self.max_words, EMBEDDING_DIM, input_length=self.input_shape, weights=[pretrained_embeddings]))
         model.add(SpatialDropout1D(0.2))
@@ -33,6 +39,10 @@ class LSTMModel:
         return model
     
     def fit(self):
+        """
+        Trains the model and saves the best model weights
+            :param self: 
+        """   
         self.model.fit(self.tokenizer.X_train, self.tokenizer.y_train,
                        batch_size=self.batch_size, epochs=self.epochs,
                        validation_data=[self.tokenizer.X_val, self.tokenizer.y_val],
@@ -42,14 +52,39 @@ class LSTMModel:
                             EarlyStopping(monitor='val_loss', patience=10, min_delta=0.0001),
                             ModelCheckpoint(filepath=os.path.join(str(model_path) + "/", 'model_lstm_best_weights.h5'), save_best_only=True)])
     
+    
+    def save(self, model_json_path, model_weights_path):
+        """
+        Saves the model structure and weights file in 'model_files' folder
+            :param self: 
+            :param model_json_path: 
+            :param model_weights_path: 
+        """   
+        with open(str(model_json_path), 'w') as json_file:
+            json_file.write(self.model.to_json())
+        self.model.save_weights(str(model_weights_path))
+
+
+    def load_model(self, model_json_path, model_weights_path):
+        """
+        Loads a pretrained model from json file and weights
+            :param self: 
+            :param model_json_path: 
+            :param model_weights_path: 
+        """   
+        with open(str(model_json_path)) as json_file:
+            self.model = model_from_json(json_file.read())
+        self.model.load_weights(str(model_weights_path))
+
+    
     def predict(self, input_sequence):
+        """
+        Predicts the PT term for the REPORTED_TERM passed
+            :param self: 
+            :param input_sequence: 
+        """   
         output = np.argmax(self.model.predict(input_sequence))
         print(output)
         med_dict = self.tokenizer.reader.int_to_pt
         print(med_dict[output])
         #return (output, med_dict[output])
-
-    def save(self, model_json_path, model_weights_path):
-        with open(str(model_json_path), 'w') as json_file:
-            json_file.write(self.model.to_json())
-        self.model.save_weights(str(model_weights_path))

@@ -6,3 +6,4 @@ src/model_files/
 src/output_files/
 *.pyc
 *.h5
+.vscode/
