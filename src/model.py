@@ -25,6 +25,7 @@ class LSTMModel:
             self.shuffle = shuffle
         else:
             self._load_model(model_json_path, model_weights_path)
+            
 
     def _create_rnn(self, pretrained_embeddings=None):
         """

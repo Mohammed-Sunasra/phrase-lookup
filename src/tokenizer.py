@@ -11,7 +11,7 @@ from config.path import glove_dir, TOKENIZER
 class Tokenize:
     
     def __init__(self, data_reader, max_words, max_len, no_of_classes,
-                 test_size=0.20, shuffle=True, random_state=42, pretrained_embeddings=True):
+                 test_size=0.20, shuffle=True, random_state=42, pretrained_embeddings):
         self.reader = data_reader
         self.data = data_reader.data
         self.X, self.y = self.data[INPUT_COL_NAME], self.data[OUTPUT_COL_NAME]
