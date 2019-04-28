@@ -9,7 +9,7 @@ from keras.metrics import top_k_categorical_accuracy, categorical_accuracy
 data_reader = DataReader(path.train_path, path.test_path, path.med_path)
 data_reader.save(path.DATA_OUTPUT_CSV)
 
-data_tokenizer = Tokenize(data_reader, max_words=const.MAX_WORDS, max_len=const.MAX_LENGTH)
+data_tokenizer = Tokenize(data_reader, max_words=const.MAX_WORDS, max_len=const.MAX_LENGTH, const.NO_OF_CLASSES)
 data_tokenizer.save_tokenizer(path.TOKENIZER)
 
 lstm_model = LSTMModel(data_tokenizer, loss='categorical_crossentropy',

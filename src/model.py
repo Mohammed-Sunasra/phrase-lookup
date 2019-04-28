@@ -14,16 +14,17 @@ from config.path import model_path
 
 class LSTMModel:
     
-    def __init__(self, tokenizer, loss=None, optimizer=None, metrics=None, batch_size=64, epochs=50, shuffle=True):
+    def __init__(self, tokenizer, loss=None, optimizer=None, metrics=None, batch_size=None, epochs=None,
+                model_json_path=None, model_weights_path=None, shuffle=True, eval=False):
         self.tokenizer = tokenizer
-        self.max_words = len(self.tokenizer.tok.word_index) + 1
-        self.input_shape = self.tokenizer.X_train.shape[1]
-        self.no_of_classes = self.tokenizer.y.shape[1]
-        self.model = self._create_rnn(self.tokenizer.pretrained_embeddings)
-        self.model.compile(loss=loss, optimizer=optimizer, metrics=metrics)
-        self.batch_size = batch_size
-        self.epochs = epochs
-        self.shuffle = shuffle
+        if not eval:
+            self.model = self._create_rnn(self.tokenizer.pretrained_embeddings)
+            self.model.compile(loss=loss, optimizer=optimizer, metrics=metrics)
+            self.batch_size = batch_size
+            self.epochs = epochs
+            self.shuffle = shuffle
+        else:
+            self._load_model(model_json_path, model_weights_path)
 
     def _create_rnn(self, pretrained_embeddings=None):
         """
@@ -32,11 +33,11 @@ class LSTMModel:
             :param pretrained_embeddings=None: 
         """   
         model = Sequential()
-        model.add(Embedding(self.max_words, EMBEDDING_DIM, input_length=self.input_shape, weights=[pretrained_embeddings]))
+        model.add(Embedding(self.tokenizer.max_words, EMBEDDING_DIM, input_length=self.tokenizer.max_words, weights=[pretrained_embeddings]))
         model.add(SpatialDropout1D(0.2))
         model.add(LSTM(256, dropout=0.2, recurrent_dropout=0.2))
         model.add(Dense(1024, activation='relu'))
-        model.add(Dense(self.no_of_classes, activation='softmax'))
+        model.add(Dense(self.tokenizer.no_of_classes, activation='softmax'))
         return model
     
     def fit(self):
@@ -66,7 +67,7 @@ class LSTMModel:
         self.model.save_weights(str(model_weights_path))
 
 
-    def load_model(self, model_json_path, model_weights_path):
+    def _load_model(self, model_json_path, model_weights_path):
         """
         Loads a pretrained model from json file and weights
             :param self: 

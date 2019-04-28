@@ -11,8 +11,8 @@ RUN pip install -r requirements.txt
 COPY . .
 LABEL maintainer="Mohammed Sunasra <mohammed.sunasra@pixeldust.com>" \
       version="1.0"
-      
-CMD python train.py
+
+CMD python predict.py
 
 
 
