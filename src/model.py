@@ -34,7 +34,7 @@ class LSTMModel:
             :param pretrained_embeddings=None: 
         """   
         model = Sequential()
-        model.add(Embedding(self.tokenizer.max_words, EMBEDDING_DIM, input_length=self.tokenizer.max_words, weights=[pretrained_embeddings]))
+        model.add(Embedding(self.tokenizer.max_words, EMBEDDING_DIM, input_length=self.tokenizer.max_len, weights=[pretrained_embeddings]))
         model.add(SpatialDropout1D(0.2))
         model.add(LSTM(256, dropout=0.2, recurrent_dropout=0.2))
         model.add(Dense(1024, activation='relu'))

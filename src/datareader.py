@@ -1,5 +1,7 @@
 import pandas as pd
+import pickle
 from config.constants import *
+
 
 class DataReader:
 
@@ -48,5 +50,8 @@ class DataReader:
         Saves the processed file in "output_files" folder
             :param self: 
             :param filepath: 
-        """   
-        self.data.to_csv(str(filepath))
+        """
+        
+        with open(str(filepath), 'wb') as pickle_file:
+            pickle.dump(self.int_to_pt, pickle_file)
+        

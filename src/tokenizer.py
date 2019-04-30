@@ -11,7 +11,7 @@ from config.path import glove_dir, TOKENIZER
 class Tokenize:
     
     def __init__(self, data_reader, max_words, max_len, no_of_classes,
-                 test_size=0.20, shuffle=True, random_state=42, pretrained_embeddings):
+                 test_size=0.20, shuffle=True, random_state=42, pretrained_embeddings=True):
         self.reader = data_reader
         self.data = data_reader.data
         self.X, self.y = self.data[INPUT_COL_NAME], self.data[OUTPUT_COL_NAME]
@@ -19,6 +19,7 @@ class Tokenize:
         self.max_len = max_len
         self.no_of_classes = no_of_classes
         self.tok, self.X, self.y = self._preprocess()
+        self.max_words = len(self.tok.word_index) + 1
         self.pretrained_embeddings = self._load_word_vectors()
         self.X_train, self.X_val, self.y_train, self.y_val = train_test_split(
             self.X, self.y,

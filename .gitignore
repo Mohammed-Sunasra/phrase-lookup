@@ -7,3 +7,4 @@ src/model_files/
 *.pyc
 .vscode/
 *.h5
+notebook_files/ml
